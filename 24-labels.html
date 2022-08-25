@@ -1,0 +1,195 @@
+<head>
+
+    <script src="barcode.js"></script>
+
+</head>
+
+<body id="main">
+    <style>
+        .table {
+            display: table;
+            border-spacing: 2px;
+        }
+
+        .row {}
+        #form {
+            display: grid;
+        }
+        .field {
+            display: inline-block;
+            margin: 0cm;
+            width: 33%;
+            height: 12,5%;
+            overflow: hidden;
+        }
+
+        textarea {
+            text-align: left;
+            width: 350px;
+            height: 120px;
+        }
+
+        #printarea {
+            font-size: 9.8px;
+            width: 620px;
+            /* A4 width 2480px */
+            height: 877px;
+            /* A4 height 3508px */
+        }
+
+        #c {
+            width: 50px;
+        }
+
+        svg {
+            width: 42%;
+            height: 20%;
+            padding: 1px;
+
+        }
+
+        .theDiv {
+            padding: 1px;
+
+        }
+
+        .aDiv {
+            display: flex;
+            align-items: left;
+            justify-content: left;
+        }
+
+
+        @media print {
+            #form {
+                display: none;
+            }
+
+            #printarea {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+
+            @page {
+                size: auto;
+                margin: 5mm;
+                background: none;
+            }
+
+            .field {
+                display: inline-block;
+                margin: 0 0 0 0;
+                width: 33.1%;
+                height: 100%;
+                padding: 0;
+
+            }
+
+            div.row {
+                display: block;
+                height: 12.5%;
+                width: 100%;
+                margin: 0 0 0 0;
+                padding: 0;
+            }
+        }
+
+    </style>
+
+    <form id="form">
+        <label>Enter the labeltext here</label>
+        <textarea rows="5" id="a" oninput="updateTable()" text="">
+        </textarea>
+        <label>Adjust font size</label>
+        <input value="9.8" oninput="updateTable()" id="c" type="number" step=".1" />
+        <label>Enter the barcode here</label>
+        <input value="7340177200029"  onchange="updateTable()" id="b" type="text" pattern="[0-9]{3}" title="Barcode in 14 chars" />
+        <p>Anpassad Marginal på Skrivaren: 3mm (top) 7mm (vänster) 0 höger 0 botten</p>
+    </form>
+
+    <section id="printarea">
+        <div class="row">
+            <div class="field"><svg class="barcode" jsbarcode-format="upc" jsbarcode-value="123456789012" jsbarcode-textmargin="0" jsbarcode-fontoptions="bold">
+                </svg></div>
+            <div class="field"></div>
+            <div class="field"></div>
+        </div>
+        <div class="row">
+            <div class="field"></div>
+            <div class="field"></div>
+            <div class="field"></div>
+        </div>
+        <div class="row">
+            <div class="field"></div>
+            <div class="field"></div>
+            <div class="field"></div>
+        </div>
+        <div class="row">
+            <div class="field"></div>
+            <div class="field"></div>
+            <div class="field"></div>
+        </div>
+        <div class="row">
+            <div class="field"></div>
+            <div class="field"></div>
+            <div class="field"></div>
+        </div>
+        <div class="row">
+            <div class="field"></div>
+            <div class="field"></div>
+            <div class="field"></div>
+        </div>
+        <div class="row">
+            <div class="field"></div>
+            <div class="field"></div>
+            <div class="field"></div>
+        </div>
+        <div class="row">
+            <div class="field"></div>
+            <div class="field"></div>
+            <div class="field"></div>
+        </div>
+    </section>
+    <script>
+
+
+        function updateTable() {
+
+
+
+            var fields = document.querySelectorAll(".field");
+
+            document.getElementById("printarea").style.fontSize = document.getElementById("c").value;
+
+            //console.log(fields.length);
+            for (i = 0; i < fields.length; i++) {
+                var svgElem = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svgElem.setAttribute("class", "barcode");
+                svgElem.setAttribute("jsbarcode-format", "ean13");
+                svgElem.setAttribute("jsbarcode-value", document.getElementById("b").value);
+                svgElem.setAttribute("jsbarcode-textmargin", 0);
+                svgElem.setAttribute("jsbarcode-fontoptions", "bold");
+                svgElem.setAttribute("jsbarcode-textAlign", "left");
+
+                //console.log(fields[i]);
+                let theDiv = document.createElement("div");
+                let aDiv = document.createElement("div");
+                aDiv.setAttribute("class", "aDiv");
+                theDiv.setAttribute("class", "theDiv");
+                theDiv.innerHTML = document.getElementById("a").value;
+                fields[i].innerHTML = '';
+                fields[i].appendChild(theDiv);
+                aDiv.appendChild(svgElem);
+                fields[i].appendChild(aDiv);
+            }
+            JsBarcode(".barcode").init();
+
+        }
+        var defalt = "Innehåller sulfiter<br>\nVolym: 75cl<br>\nÅrgång: 2015<br>\nAlkoholhalt: 13,5% (vol)<br>\nImportör: Sakeman & Sakesson AB<br>\nKontakt: info@sakeman-sakesson.se<br>\nProducent: Perego e Perego";
+        document.getElementById("a").value = defalt;
+        updateTable();
+    </script>
+
+
+</body>
